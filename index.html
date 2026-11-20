@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dollar Kursi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Onest:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root {
+  --bg: #f3f5f1;
+  --surface: #ffffff;
+  --fg: #14201a;
+  --muted: #5d6b63;
+  --line: #d9dfd7;
+  --accent: #0f6b4a;
+  --up: #0f6b4a;
+  --up-bg: #dff1e8;
+  --down: #a8321f;
+  --down-bg: #f9e3df;
+  --field: #eef2ec;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1612; --surface: #16211b; --fg: #e8efe9; --muted: #93a499; --line: #26352c;
+    --accent: #4fcf9a; --up: #4fcf9a; --up-bg: #173626; --down: #ff8f7d; --down-bg: #3a1d19; --field: #1c2a22;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1612; --surface: #16211b; --fg: #e8efe9; --muted: #93a499; --line: #26352c;
+  --accent: #4fcf9a; --up: #4fcf9a; --up-bg: #173626; --down: #ff8f7d; --down-bg: #3a1d19; --field: #1c2a22;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: .01em; }
+.pill { font: inherit; font-size: .82rem; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.pill:hover { border-color: var(--accent); }
+.dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--fg); background: linear-gradient(90deg, var(--fg) 50%, transparent 50%); }
+.top-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hero { display: flex; flex-direction: column; gap: 6px; }
+.label { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; color: var(--muted); font-weight: 500; }
+.rate { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 13vw, 4rem); line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; min-height: 1em; }
+.rate small { font-size: .38em; font-weight: 600; color: var(--muted); letter-spacing: 0; margin-left: .2em; }
+.delta { display: inline-flex; align-self: flex-start; gap: 6px; align-items: center; background: var(--up-bg); color: var(--up); font-family: var(--font-mono); font-size: .85rem; padding: 4px 10px; border-radius: 999px; }
+.delta.down { background: var(--down-bg); color: var(--down); }
+.delta[hidden] { display: none; }
+.status { color: var(--muted); font-size: .8rem; }
+.status.warn { color: var(--down); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.field { display: flex; flex-direction: column; gap: 4px; background: var(--field); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.field input { font-family: var(--font-mono); font-size: 1.35rem; color: var(--fg); background: transparent; border: 0; outline: 0; width: 100%; min-width: 0; padding: 0; }
+.field:focus-within { box-shadow: 0 0 0 2px var(--accent); }
+.cur { font-family: var(--font-display); font-weight: 700; font-size: 1rem; min-width: 3.2em; text-align: center; }
+.swap { align-self: center; justify-self: center; font: inherit; font-weight: 600; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.swap:hover { border-color: var(--accent); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chips button { font: inherit; font-family: var(--font-mono); font-size: .85rem; border: 1px solid var(--line); background: transparent; color: var(--fg); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.chips button:hover { border-color: var(--accent); color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h2 { font-family: var(--font-display); font-size: 1rem; margin: 0; }
+.note { color: var(--muted); font-size: .78rem; }
+.note a { color: inherit; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <span class="brand">Dollar Kursi</span>
+    <div class="top-right">
+      <button type="button" class="pill" id="refresh">Yangilash</button>
+      <button type="button" class="pill" id="theme" aria-pressed="false"><span class="dot" aria-hidden="true"></span><span id="themeText">Tungi rejim</span></button>
+    </div>
+  </div>
+
+  <section class="hero" aria-label="Markaziy bank kursi">
+    <span class="label">1 AQSH dollari · Markaziy bank</span>
+    <div class="rate" id="rate">Yuklanmoqda…</div>
+    <span class="delta" id="delta" hidden></span>
+    <span class="status" id="status" aria-live="polite"></span>
+  </section>
+
+  <section class="card" aria-label="Konvertor">
+    <h2>Hisoblash</h2>
+    <div class="row">
+      <label class="field"><span class="label" id="fromLabel">Dollar</span>
+        <input id="amount" inputmode="decimal" autocomplete="off" value="100" aria-labelledby="fromLabel"></label>
+      <span class="cur" id="fromCur">USD</span>
+    </div>
+    <button type="button" class="swap" id="swap" aria-label="Yo'nalishni almashtirish">⇅ Almashtirish</button>
+    <div class="row">
+      <label class="field"><span class="label" id="toLabel">So'm</span>
+        <input id="result" readonly aria-labelledby="toLabel"></label>
+      <span class="cur" id="toCur">UZS</span>
+    </div>
+    <div class="chips" id="chips" aria-label="Tez summalar"></div>
+  </section>
+
+  <p class="note">Manba: <a href="https://cbu.uz" target="_blank" rel="noopener">O'zbekiston Respublikasi Markaziy banki</a>. Kurs sahifa ochilganda va har 5 daqiqada o'zi yangilanadi. Markaziy bank kursni kuniga bir marta belgilaydi.</p>
+</main>
+
+<script>
+(function () {
+  var FALLBACK = { rate: 12055.90, diff: 44.25, date: "19.10.2026", source: "saqlangan" };
+  var MONTHS = ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"];
+  var current = null, usdToUzs = true;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var rateEl = $("rate"), deltaEl = $("delta"), statusEl = $("status");
+  var amount = $("amount"), result = $("result"), chips = $("chips");
+
+  function fmt(n, d) {
+    return n.toLocaleString("fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/[  ]/g, " ");
+  }
+  function parse(s) { return parseFloat(String(s).replace(/\s/g, "").replace(",", ".")); }
+  function prettyDate(d) {
+    var p = String(d).split(".");
+    if (p.length !== 3) return d;
+    return parseInt(p[0], 10) + "-" + MONTHS[parseInt(p[1], 10) - 1] + ", " + p[2];
+  }
+  function clock() {
+    var t = new Date();
+    return ("0" + t.getHours()).slice(-2) + ":" + ("0" + t.getMinutes()).slice(-2);
+  }
+
+  function showRate(data, note, warn) {
+    current = data;
+    rateEl.innerHTML = fmt(data.rate, 2) + "<small>so'm</small>";
+    if (typeof data.diff === "number" && !isNaN(data.diff)) {
+      var up = data.diff >= 0;
+      deltaEl.hidden = false;
+      deltaEl.className = "delta" + (up ? "" : " down");
+      deltaEl.textContent = (up ? "▲ " : "▼ ") + fmt(Math.abs(data.diff), 2) + " so'm kechagidan";
+    } else {
+      deltaEl.hidden = true;
+    }
+    statusEl.className = "status" + (warn ? " warn" : "");
+    statusEl.textContent = note;
+    render();
+  }
+
+  function loadCbu() {
+    return fetch("https://cbu.uz/oz/arkhiv-kursov-valyut/json/USD/", { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("cbu " + r.status); return r.json(); })
+      .then(function (arr) {
+        var x = arr && arr[0];
+        var rate = x && parseFloat(x.Rate);
+        if (!rate || isNaN(rate)) throw new Error("cbu bad data");
+        return { rate: rate, diff: parseFloat(x.Diff), date: x.Date, source: "cbu" };
+      });
+  }
+  function loadBackup() {
+    return fetch("https://open.er-api.com/v6/latest/USD", { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("backup " + r.status); return r.json(); })
+      .then(function (j) {
+        var rate = j && j.rates && j.rates.UZS;
+        if (!rate) throw new Error("backup bad data");
+        return { rate: rate, diff: NaN, date: null, source: "backup" };
+      });
+  }
+
+  function load() {
+    statusEl.className = "status";
+    statusEl.textContent = "Yangilanmoqda…";
+    loadCbu().then(function (d) {
+      try { localStorage.setItem("lastRate", JSON.stringify(d)); } catch (e) {}
+      showRate(d, prettyDate(d.date) + " holatiga · yangilandi " + clock(), false);
+    }).catch(function () {
+      return loadBackup().then(function (d) {
+        try { localStorage.setItem("lastRate", JSON.stringify(d)); } catch (e) {}
+        showRate(d, "Zaxira manbadan olindi (Markaziy bankga ulanib bo'lmadi) · " + clock(), false);
+      });
+    }).catch(function () {
+      var saved = null;
+      try { saved = JSON.parse(localStorage.getItem("lastRate")); } catch (e) {}
+      var d = saved && saved.rate ? saved : FALLBACK;
+      var when = d.date ? prettyDate(d.date) : "oxirgi marta";
+      showRate(d, "Internetga ulanib bo'lmadi. " + when + " holatidagi saqlangan kurs ko'rsatilmoqda.", true);
+    });
+  }
+
+  function render() {
+    if (!current) return;
+    var r = current.rate, v = parse(amount.value);
+    result.value = isNaN(v) ? "" : (usdToUzs ? fmt(v * r, 0) : fmt(v / r, 2));
+    $("fromCur").textContent = usdToUzs ? "USD" : "UZS";
+    $("toCur").textContent = usdToUzs ? "UZS" : "USD";
+    $("fromLabel").textContent = usdToUzs ? "Dollar" : "So'm";
+    $("toLabel").textContent = usdToUzs ? "So'm" : "Dollar";
+  }
+  function renderChips() {
+    var amounts = usdToUzs ? [10, 50, 100, 500, 1000] : [100000, 500000, 1000000, 5000000];
+    chips.innerHTML = "";
+    amounts.forEach(function (a) {
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = fmt(a, 0);
+      b.addEventListener("click", function () { amount.value = String(a); render(); });
+      chips.appendChild(b);
+    });
+  }
+
+  var root = document.documentElement, themeBtn = $("theme"), themeText = $("themeText");
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  function isDark() {
+    var t = root.getAttribute("data-theme");
+    return t ? t === "dark" : !!(mq && mq.matches);
+  }
+  function syncTheme() {
+    var d = isDark();
+    themeBtn.setAttribute("aria-pressed", d ? "true" : "false");
+    themeText.textContent = d ? "Kunduzgi rejim" : "Tungi rejim";
+  }
+  try { var saved = localStorage.getItem("theme"); if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved); } catch (e) {}
+  themeBtn.addEventListener("click", function () {
+    var next = isDark() ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    syncTheme();
+  });
+  if (mq && mq.addEventListener) mq.addEventListener("change", syncTheme);
+  syncTheme();
+
+  amount.addEventListener("input", render);
+  $("swap").addEventListener("click", function () {
+    var out = result.value;
+    usdToUzs = !usdToUzs;
+    amount.value = out ? out.replace(/\s/g, "") : "";
+    renderChips();
+    render();
+  });
+  $("refresh").addEventListener("click", load);
+
+  renderChips();
+  load();
+  setInterval(load, 5 * 60 * 1000);
+})();
+</script>
+</body>
+</html>
