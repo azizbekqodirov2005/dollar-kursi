@@ -2,7 +2,7 @@
 
 AQSH dollarining so'mga nisbatan bugungi rasmiy kursini ko'rsatadigan va dollar bilan so'm o'rtasida hisoblaydigan kichik veb-sahifa.
 
-**Saytni ochish:** https://dollar-kursi-uz-0c9l.netlify.app
+**Saytni ochish:** https://dollarkursi.netlify.app/
 
 ## Imkoniyatlar
 
